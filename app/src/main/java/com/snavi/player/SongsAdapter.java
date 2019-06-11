@@ -132,7 +132,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.ViewHolder> 
         TextView totalTime = m_playBar.findViewById(R.id.activity_main_tv_total_time);                  // find tv with length of the song
         totalTime.setText(MainActivity.getInMinSecFormat(m_mediaPlayer.getDuration() / 1000));  // display length of the song
         TextView titleTv = m_playBar.findViewById(R.id.activity_main_tv_title);                         // find tv with song's title
-        titleTv.setText(m_titles.get(titleIdx));                                                        // set song title
+        titleTv.setText(m_titles.get(titleIdx));                                                        // set song title (on bottom bar)
         ImageButton imageButton = m_playBar.findViewById(R.id.activity_main_play_button);               // find play/pause button
         imageButton.setImageDrawable(m_context.getDrawable(R.drawable.pause_icon));                     // change play/pause button to pause (song is playing)
     }

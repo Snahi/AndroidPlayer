@@ -33,12 +33,12 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
 
 
     // fields ////////////////////////////////////////////////////////////////////////////////////
-    private ArrayList<Uri>             m_uris;
-    private ArrayList<String>          m_titles;
-    private MediaPlayer                m_mediaPlayer;
-    private SongProgress               m_songProgress;
-    private TextView                   m_currTime;
-    private SeekBar                    m_seekBar;
+    private ArrayList<Uri>    m_uris;
+    private ArrayList<String> m_titles;
+    private MediaPlayer       m_mediaPlayer;
+    private SongProgress      m_songProgress;
+    private TextView          m_currTime;
+    private SeekBar           m_seekBar;
 
 
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
 
     private void initMediaFields()
     {
-        m_mediaPlayer = new MediaPlayer();
+        m_mediaPlayer  = new MediaPlayer();
         m_songProgress = new SongProgress(m_mediaPlayer);
         m_songProgress.registerListener(this);
         m_songProgress.start();
@@ -75,14 +75,13 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
     private void initViews()
     {
         m_currTime = findViewById(R.id.activity_main_tv_curr_time);
-        m_seekBar = findViewById(R.id.activity_main_seek_bar);
+        m_seekBar  = findViewById(R.id.activity_main_seek_bar);
     }
 
 
 
     private void initRecyclerView()
     {
-        // fields ////////////////////////////////////////////////////////////////////////////////////
         RecyclerView recyclerView = findViewById(R.id.activity_main_recycler_view);
         recyclerView.setHasFixedSize(true);
 
@@ -119,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
     private Cursor getCursor()
     {
         ContentResolver contentResolver = getContentResolver();
-        String[] projection = new String[2];
+        String[] projection   = new String[2];
         projection[URI_IDX]   = "_id";
         projection[TITLE_IDX] = "title";
 
@@ -150,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
 
         m_mediaPlayer.pause();
 
-        // change button on play button
+        // change button on play button, because song was paused
         ImageButton playButton = findViewById(R.id.activity_main_play_button);
         playButton.setImageDrawable(getDrawable(R.drawable.play_icon));
     }
@@ -173,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
     {
         setBarProgress(currSecond);
 
-        // without this -> exception
+        // without this -> exception; Can't edit from different thread
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -189,18 +188,14 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
         SeekBar seekBar = findViewById(R.id.activity_main_seek_bar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-
-            }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {}
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) {}
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                m_mediaPlayer.seekTo(seekBar.getProgress() * 1000);
+                m_mediaPlayer.seekTo(seekBar.getProgress() * 1000);                            // move song progress to point chose by user
             }
         });
     }
@@ -234,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements SongProgressListe
 
     private void setBarProgress(int progressInSeconds)
     {
-        try // may be updated at the same time when user clicks
+        try // may be updated at the same time when user clicks -> to avoid concurrent modification exc
         {
             m_seekBar.setProgress(progressInSeconds);
         }

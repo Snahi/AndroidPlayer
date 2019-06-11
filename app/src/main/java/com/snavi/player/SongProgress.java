@@ -42,6 +42,22 @@ public class SongProgress extends Thread {
                 notifyListeners();
                 m_lastMeasure = System.currentTimeMillis();
             }
+
+            goSleep(TIME_BETWEEN_READS - System.currentTimeMillis() + m_lastMeasure);       // Sleep until TIME_BETWEEN_READS passes
+        }
+    }
+
+
+
+    private void goSleep(long howLong)
+    {
+        try
+        {
+            Thread.sleep(howLong);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
         }
     }
 
